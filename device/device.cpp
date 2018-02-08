@@ -1,4 +1,4 @@
-// asio_client_01.cpp : 定义控制台应用程序的入口点。 
+// asio_client_01.cpp : 定义控制台应用程序的入口点。
 //
 
 #include "stdafx.h"
@@ -28,7 +28,7 @@ typedef struct
 	bool reset;
 }DATA_TO_DRIVER, *PDATA_TO_DRIVER;
 
-
+//git
 typedef struct
 {
 	BYTE sMark;     //标志位（默认为55）   
