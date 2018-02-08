@@ -66,8 +66,8 @@ class udp_server
 {
 public:
 	udp_server(boost::asio::io_context& io_context)
-		: socket_(io_context, udp::endpoint(udp::v4(), 13)), r_io_context(io_context), tar_endpoint_
-		(boost::asio::ip::address_v4::from_string("127.0.0.1"),14)
+		: socket_(io_context, udp::endpoint(udp::v4(), 14)), r_io_context(io_context), tar_endpoint_
+		(boost::asio::ip::address_v4::from_string("127.0.0.1"),13)
 	{
 		//start_receive();
 	}

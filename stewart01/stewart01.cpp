@@ -42,15 +42,15 @@ public:
 	
 
 	udp_server(boost::asio::io_context& io_context, boost::mutex& g_logMutex)
-		: socket_(io_context, udp::endpoint(udp::v4(), 14)), r_io_context(io_context),
+		: socket_(io_context, udp::endpoint(udp::v4(), 13)), r_io_context(io_context),
 		up_(io_context, g_logMutex),
 		cc_(io_context, g_logMutex),
 		commuDevice_(io_context, g_logMutex)
 	{
-		/*tar_dev_endpoint_ = udp::endpoint(boost::asio::ip::address_v4::from_string("125.125.122.83"),14);
-		tar_upper_endpoint_ = udp::endpoint(boost::asio::ip::address_v4::from_string("127.0.0.1"), 14);*/
-		tar_dev_endpoint_ = udp::endpoint(boost::asio::ip::address_v4::from_string("127.0.0.1"), 15);
-		tar_upper_endpoint_ = udp::endpoint(boost::asio::ip::address_v4::from_string("127.0.0.1"), 13);
+		tar_dev_endpoint_ = udp::endpoint(boost::asio::ip::address_v4::from_string("125.125.122.83"),14);
+		tar_upper_endpoint_ = udp::endpoint(boost::asio::ip::address_v4::from_string("127.0.0.1"), 14);
+		/*tar_dev_endpoint_ = udp::endpoint(boost::asio::ip::address_v4::from_string("127.0.0.1"), 15);
+		tar_upper_endpoint_ = udp::endpoint(boost::asio::ip::address_v4::from_string("127.0.0.1"), 13);*/
 	}
 
 	void entry_recv_send()

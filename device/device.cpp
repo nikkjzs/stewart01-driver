@@ -98,8 +98,8 @@ class udp_server
 public:
 	udp_server(boost::asio::io_context& io_context)
 		: socket_(io_context, udp::endpoint(udp::v4(), 15)), r_io_context(io_context), tar_endpoint_
-		//(boost::asio::ip::address_v4::from_string("192.168.2.151"),13)
-		(boost::asio::ip::address_v4::from_string("127.0.0.1"), 14)
+		(boost::asio::ip::address_v4::from_string("192.168.2.151"),13)
+		//(boost::asio::ip::address_v4::from_string("127.0.0.1"), 14)
 	{
 		//start_receive();
 	}
