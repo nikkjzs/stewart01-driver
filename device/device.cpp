@@ -49,7 +49,7 @@ typedef struct
 	float rMoto[6];      //µç»úÂëÖµ 
 }DataToMain;
 
-//ss
+
 
 
 enum DEVICE_STATUS
