@@ -29,7 +29,6 @@ public:
 
 	void updataDeviceStatus(char* recv_buffer)
 	{
-		//DEVICE_STATUS l_vice_stat = (DEVICE_STATUS)(*(DATA_TO_DRIVER*)recv_buffer).dev_stat;
 		DEVICE_STATUS l_vice_stat = (DEVICE_STATUS)(*(DataToMain*)recv_buffer).rComd;
 		vice_status_ = l_vice_stat;
 	}

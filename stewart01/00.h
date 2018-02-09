@@ -21,15 +21,18 @@ public:
 		last_new_data.timeStamp = -1;
 	}
 
+
 	void processBefore(char* recv_buffer)
 	{
 		discardobsoleteData(recv_buffer);
 	}
 
+
 	void processAfter()
 	{
 		process0();
 	}
+
 
 	void discardobsoleteData(char* recv_buffer)
 	{
@@ -37,10 +40,8 @@ public:
 
 		if (l_recv_data.timeStamp > last_new_data.timeStamp)
 		{
-			//io_mutex.lock();
 			ready_process_data_stack.push(l_recv_data);
 			last_new_data = l_recv_data;
-			//io_mutex.unlock();
 		}
 	}
 
@@ -48,10 +49,8 @@ public:
 
 	void process0()
 	{
-		//io_mutex.lock();
 		if (ready_process_data_stack.empty() == true)
 		{
-			//io_mutex.unlock();
 			return;
 		}
 
@@ -77,11 +76,9 @@ public:
 		logMutex.lock();
 		std::cout << boost::this_thread::get_id() << "===" << newer_data.timeStamp << std::endl;
 		logMutex.unlock();
-		//std::cout << newer_data.timeStamp << std::endl;
-
-		//io_mutex.unlock();
 		return;
 	}
+
 
 	virtual void process01(DATA_TO_DRIVER newer_data) = 0
 	{
@@ -105,6 +102,7 @@ public:
 		}
 	};
 
+
 	DATA_TO_DRIVER GetAndDelMin()//tmp
 	{
 		outCacheSetMutex.lock();
@@ -115,12 +113,12 @@ public:
 		return minData;
 	}
 
+
 	DATA_TO_DRIVER GetMAxAndClearAll()//tmp
 	{
 		outCacheSetMutex.lock();
 		done_process_data_list.sort(nodeForSrot());
 		DATA_TO_DRIVER minData = done_process_data_list.back();
-		//done_process_data_list.erase(done_process_data_list.begin());
 		done_process_data_list.clear();
 		outCacheSetMutex.unlock();
 		return minData;
