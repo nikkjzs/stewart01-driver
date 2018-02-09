@@ -168,6 +168,7 @@ public:
 	DEVICE_STATUS dev_stat_ = status0;
 };
 
+
 int main()
 {
 	try
