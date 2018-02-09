@@ -57,10 +57,9 @@ enum S_CMD
 
 std::string make_daytime_string()
 {
-	//using namespace std; // For time_t, time and ctime;
-	//time_t now = time(0);
 	return "justmakestring";
 }
+
 
 class udp_server
 {
@@ -69,8 +68,8 @@ public:
 		: socket_(io_context, udp::endpoint(udp::v4(), 14)), r_io_context(io_context), tar_endpoint_
 		(boost::asio::ip::address_v4::from_string("127.0.0.1"),13)
 	{
-		//start_receive();
 	}
+
 
 	void start_receive_entry()
 	{
@@ -88,26 +87,18 @@ public:
 				boost::asio::placeholders::bytes_transferred));
 	}
 
+
 	void handle_receive(const boost::system::error_code& error,
 		std::size_t /*bytes_transferred*/)
 	{
 		if (!error || error == boost::asio::error::message_size)
 		{
-
 			DATA_TO_DRIVER recvdata = { 0 };
 			recvdata = *(DATA_TO_DRIVER*)recv_buffer_;
 			statmutex.lock();
 			dev_stat_ = *(DEVICE_STATUS*)&recvdata.dev_stat;
 			statmutex.unlock();
 			std::cout << recvdata.timeStamp << std::endl;
-
-
-
-			/*static DATA_TO_DRIVER senddata = { 0 };
-			senddata.timeStamp++;
-			*(DATA_TO_DRIVER*)send_buffer_ = senddata;
-
-			socket_.async_send_to(boost::asio::buffer(send_buffer_), remote_endpoint_,boost::bind(&udp_server::handle_send, this));*/
 
 			start_receive();
 		}
@@ -118,23 +109,15 @@ public:
 		for (;;)
 		{
 			static DATA_TO_DRIVER senddata = { 0 };
-			
 
 			statmutex.lock();
 			senddata.timeStamp++;
 			senddata.upper_cmd = orderfunc(dev_stat_);
 			*(DATA_TO_DRIVER*)send_buffer_ = senddata;
-			int ret = socket_.send_to(boost::asio::buffer(send_buffer_), tar_endpoint_);// , boost::bind(&udp_server::handle_send, this));
+			int ret = socket_.send_to(boost::asio::buffer(send_buffer_), tar_endpoint_);
 			statmutex.unlock();
 		}
 	}
-
-
-
-	/*void handle_send()
-	{
-		start_send();
-	}*/
 
 
 	S_CMD orderfunc(DEVICE_STATUS curStat)
@@ -183,7 +166,6 @@ public:
 	char send_buffer_[255] = {0};
 	boost::asio::io_context& r_io_context;
 	DEVICE_STATUS dev_stat_ = status0;
-	//boost::array<char, 1> recv_buffer_;
 };
 
 int main()
@@ -192,17 +174,12 @@ int main()
 	{
 		boost::thread_group group;
 
-		
-
 		boost::asio::io_context io_context;
 		udp_server server(io_context);
 
 		group.create_thread(boost::bind(&udp_server::start_send, &server));
 		group.create_thread(boost::bind(&udp_server::start_receive_entry, &server));
 		
-
-		//io_context.run();
-
 		group.join_all();
 	}
 	catch (std::exception& e)

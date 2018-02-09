@@ -76,22 +76,14 @@ enum S_CMD
 };
 
 
-//sComd = 0,      //正常发送运动参数 
-//sComd = 2,      //控制平台回到中立位 
-//sComd = 4,      //握手协议：平台切换到工作态 
-//sComd = 6,      //开机命令：平台由底位上升到中立位 
-//sComd = 7,      //关机命令：平台由中立位回到底位 
-//sComd = 8       //保留 
-
 
 
 
 std::string make_daytime_string()
 {
-	//using namespace std; // For time_t, time and ctime;
-	//time_t now = time(0);
 	return "justmakestring";
 }
+
 
 class udp_server
 {
@@ -99,16 +91,16 @@ public:
 	udp_server(boost::asio::io_context& io_context)
 		: socket_(io_context, udp::endpoint(udp::v4(), 14)), r_io_context(io_context), tar_endpoint_
 		(boost::asio::ip::address_v4::from_string("192.168.2.151"),13)
-		//(boost::asio::ip::address_v4::from_string("127.0.0.1"), 14)
 	{
-		//start_receive();
 	}
+
 
 	void start_receive_entry()
 	{
 		start_receive();
 		r_io_context.run();
 	}
+
 
 	void start_receive()
 	{
@@ -118,6 +110,7 @@ public:
 				boost::asio::placeholders::error,
 				boost::asio::placeholders::bytes_transferred));
 	}
+
 
 	void handle_receive(const boost::system::error_code& error,
 		std::size_t /*bytes_transferred*/)
@@ -133,25 +126,10 @@ public:
 			dev_stat_ = changedStat;
 			statmutex.unlock();
 
-			//std::cout << recvdata.timeStamp << std::endl;
-
-
 			start_receive();
-
-			/*DATA_TO_DRIVER recvdata = { 0 };
-			recvdata = *(DATA_TO_DRIVER*)recv_buffer_;
-			
-			statmutex.lock();
-			DEVICE_STATUS changedStat = changestatus(dev_stat_, recvdata.upper_cmd);
-			dev_stat_ = changedStat;
-			statmutex.unlock();
-
-			std::cout << recvdata.timeStamp << std::endl;
-
-
-			start_receive();*/
 		}
 	}
+
 
 	void start_send_entry()
 	{
@@ -159,45 +137,23 @@ public:
 		r_io_context.run();
 	}
 
+
 	void start_send()
 	{
 		for (;;)
 		{
-
-
-			//socket_.async_send_to(boost::asio::buffer(send_buffer_), remote_endpoint_, boost::bind(&udp_server::handle_send, this));
 			static DataToMain senddata = { 0 };
-			//senddata.timeStamp++;
 			*(DataToMain*)send_buffer_ = senddata;
 			statmutex.lock();
 			senddata.rComd = dev_stat_;
-			int ret = socket_.send_to(boost::asio::buffer(send_buffer_), tar_endpoint_);// , boost::bind(&udp_server::handle_send, this));
+			int ret = socket_.send_to(boost::asio::buffer(send_buffer_), tar_endpoint_);
 			statmutex.unlock();
 
 			int err = GetLastError();
 		}
-
-
-		//for (;;)
-		//{
-		//	
-
-		//	//socket_.async_send_to(boost::asio::buffer(send_buffer_), remote_endpoint_, boost::bind(&udp_server::handle_send, this));
-		//	static DATA_TO_DRIVER senddata = { 0 };
-		//	senddata.timeStamp++;
-		//	*(DATA_TO_DRIVER*)send_buffer_ = senddata;
-		//	statmutex.lock();
-		//	senddata.dev_stat = dev_stat_;
-		//	int ret = socket_.send_to(boost::asio::buffer(send_buffer_), tar_endpoint_);// , boost::bind(&udp_server::handle_send, this));
-		//	statmutex.unlock();
-
-		//	int err = GetLastError();
-		//}
 	}
 
-	//void handle_send(boost::shared_ptr<std::string> /*message*/,
-	//	const boost::system::error_code& /*error*/,
-	//	std::size_t /*bytes_transferred*/)
+
 	void handle_send()
 	{
 		start_send();
@@ -258,10 +214,10 @@ public:
 	char recv_buffer_[255] = {0};
 	char send_buffer_[255] = {0};
 	boost::asio::io_context& r_io_context;
-	//boost::array<char, 1> recv_buffer_;
 
 	DEVICE_STATUS dev_stat_ = status0;
 };
+
 
 int main()
 {
@@ -269,16 +225,11 @@ int main()
 	{
 		boost::thread_group group;
 
-		
-
 		boost::asio::io_context io_context;
 		udp_server server(io_context);
 
 		group.create_thread(boost::bind(&udp_server::start_send_entry, &server));
 		group.create_thread(boost::bind(&udp_server::start_receive_entry, &server));
-		
-
-		//io_context.run();
 
 		group.join_all();
 	}
@@ -291,46 +242,4 @@ int main()
 }
 
 
-
-
-//int main(int argc, char* argv[])
-//{
-//	try
-//	{
-//		if (argc != 2)
-//		{
-//			std::cerr << "Usage: client <host>" << std::endl;
-//			return 1;
-//		}
-//
-//		boost::asio::io_context io_context;
-//
-//		//udp::resolver resolver(io_context);
-//		//udp::endpoint receiver_endpoint =
-//		//	*resolver.resolve(udp::v4(), argv[1], "daytime").begin();
-//
-//		udp::endpoint receiver_endpoint(boost::asio::ip::address_v4::from_string("127.0.0.1"),13);
-//		udp::socket socket(io_context);
-//		socket.open(udp::v4());
-//
-//		boost::array<char, 1> send_buf = { { 0 } };
-//		for (;;)
-//		{
-//			socket.send_to(boost::asio::buffer(send_buf), receiver_endpoint);
-//			int err = GetLastError();
-//		}
-//
-//		boost::array<char, 128> recv_buf;
-//		udp::endpoint sender_endpoint;
-//		size_t len = socket.receive_from(
-//			boost::asio::buffer(recv_buf), sender_endpoint);
-//
-//		std::cout.write(recv_buf.data(), len);
-//	}
-//	catch (std::exception& e)
-//	{
-//		std::cerr << e.what() << std::endl;
-//	}
-//}
-//
 

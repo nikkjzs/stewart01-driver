@@ -3,7 +3,6 @@
 
 #include "stdafx.h"
 
-
 #include "01.h"
 #include "02.h"
 #include "device.h"
@@ -33,14 +32,6 @@ std::string make_daytime_string()
 class udp_server
 {
 public:
-	//void logLine()
-	//{
-	//	log_mutex.lock();
-	//	std::cout << boost::this_thread::get_id() << "===" << __LINE__ << std::endl;
-	//	log_mutex.unlock();
-	//}
-	
-
 	udp_server(boost::asio::io_context& io_context, boost::mutex& g_logMutex)
 		: socket_(io_context, udp::endpoint(udp::v4(), 13)), r_io_context(io_context),
 		up_(io_context, g_logMutex),
@@ -49,8 +40,6 @@ public:
 	{
 		tar_dev_endpoint_ = udp::endpoint(boost::asio::ip::address_v4::from_string("125.125.122.83"),14);
 		tar_upper_endpoint_ = udp::endpoint(boost::asio::ip::address_v4::from_string("127.0.0.1"), 14);
-		/*tar_dev_endpoint_ = udp::endpoint(boost::asio::ip::address_v4::from_string("127.0.0.1"), 15);
-		tar_upper_endpoint_ = udp::endpoint(boost::asio::ip::address_v4::from_string("127.0.0.1"), 13);*/
 	}
 
 	void entry_recv_send()
@@ -71,16 +60,6 @@ public:
 
 	void entry_realtimer_send()
 	{
-		//for (;;)
-		//{
-		//	if (remote_endpoint_.address().to_string() == "125.125.122.83")
-		//	{
-		//		break;
-		//	}
-		//	Sleep(1);
-		//}
-
-
 		boost::asio::io_context io;
 
 		for (;;)
@@ -136,10 +115,7 @@ private:
 	{
 		if (!error || error == boost::asio::error::message_size)
 		{
-			
-
 			branchWorkflow();
-
 		}
 	}
 
@@ -152,10 +128,6 @@ private:
 			up_.processBefore(recv_buffer_);
 			start_receive();
 			up_.processAfter();
-
-
-			//处理数据
-			//r_io_context.post(boost::bind(&udp_server::process0, this));
 		}
 		else if (l_remote_endpoint.address().to_string() == "125.125.122.83")//lower monitor
 		{
@@ -221,7 +193,6 @@ int main()
 		udp_server server(io_context,g_logMutex);
 
 		boost::thread_group group;
-		
 
 		for (int num = 0; num < 4; ++num)
 		{
