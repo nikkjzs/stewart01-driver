@@ -27,13 +27,6 @@ public:
 		discardobsoleteData(recv_buffer);
 	}
 
-
-	void processAfter()
-	{
-		process0();
-	}
-
-
 	void discardobsoleteData(char* recv_buffer)
 	{
 		DATA_TO_DRIVER l_recv_data = *(DATA_TO_DRIVER*)recv_buffer;
@@ -46,6 +39,11 @@ public:
 	}
 
 
+
+	void processAfter()
+	{
+		process0();
+	}
 
 	void process0()
 	{
@@ -103,7 +101,7 @@ public:
 	};
 
 
-	DATA_TO_DRIVER GetAndDelMin()//tmp
+	DATA_TO_DRIVER GetAndDelMin()
 	{
 		outCacheSetMutex.lock();
 		done_process_data_list.sort(nodeForSrot());
@@ -114,7 +112,7 @@ public:
 	}
 
 
-	DATA_TO_DRIVER GetMAxAndClearAll()//tmp
+	DATA_TO_DRIVER GetMAxAndClearAll()
 	{
 		outCacheSetMutex.lock();
 		done_process_data_list.sort(nodeForSrot());
@@ -123,11 +121,9 @@ public:
 		outCacheSetMutex.unlock();
 		return minData;
 	}
-	
-
 
 	boost::lockfree::stack<DATA_TO_DRIVER> ready_process_data_stack;
-	boost::container::list<DATA_TO_DRIVER> done_process_data_list;//ys
+	boost::container::list<DATA_TO_DRIVER> done_process_data_list;
 
 	DATA_TO_DRIVER last_new_data;
 	boost::asio::io_context& r_io_context;

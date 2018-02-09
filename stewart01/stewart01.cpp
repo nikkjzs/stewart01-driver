@@ -90,6 +90,15 @@ public:
 				boost::asio::placeholders::bytes_transferred));
 	}
 
+	void handle_receive(const boost::system::error_code& error,
+		std::size_t /*bytes_transferred*/)
+	{
+		if (!error || error == boost::asio::error::message_size)
+		{
+			branchWorkflow();
+		}
+	}
+
 
 	void start_send()
 	{
@@ -102,24 +111,12 @@ public:
 			boost::bind(&udp_server::handle_send, this));
 	}
 
-
 	void handle_send()
 	{
 		start_send();
 	}
 
 private:
-
-	void handle_receive(const boost::system::error_code& error,
-		std::size_t /*bytes_transferred*/)
-	{
-		if (!error || error == boost::asio::error::message_size)
-		{
-			branchWorkflow();
-		}
-	}
-
-
 	void branchWorkflow()
 	{
 		udp::endpoint l_remote_endpoint = remote_endpoint_;

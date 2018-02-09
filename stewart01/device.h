@@ -20,6 +20,13 @@ public:
 		updataDeviceStatus(recv_buffer);
 	}
 
+	void updataDeviceStatus(char* recv_buffer)
+	{
+		DEVICE_STATUS l_vice_stat = (DEVICE_STATUS)(*(DataToMain*)recv_buffer).rComd;
+		vice_status_ = l_vice_stat;
+	}
+
+
 	void processAfter()
 	{
 		logMutex.lock();
@@ -27,11 +34,6 @@ public:
 		logMutex.unlock();
 	}
 
-	void updataDeviceStatus(char* recv_buffer)
-	{
-		DEVICE_STATUS l_vice_stat = (DEVICE_STATUS)(*(DataToMain*)recv_buffer).rComd;
-		vice_status_ = l_vice_stat;
-	}
 
 	DEVICE_STATUS GetCurStat()
 	{
