@@ -28,7 +28,6 @@ typedef struct
 	bool reset;
 }DATA_TO_DRIVER, *PDATA_TO_DRIVER;
 
-//git
 typedef struct
 {
 	BYTE sMark;     //标志位（默认为55）   
