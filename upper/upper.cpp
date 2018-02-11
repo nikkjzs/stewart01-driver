@@ -98,7 +98,7 @@ public:
 			statmutex.lock();
 			dev_stat_ = *(DEVICE_STATUS*)&recvdata.dev_stat;
 			statmutex.unlock();
-			std::cout << recvdata.timeStamp << std::endl;
+			//std::cout << recvdata.timeStamp << std::endl;
 
 			start_receive();
 		}

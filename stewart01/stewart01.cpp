@@ -36,7 +36,8 @@ public:
 		: socket_(io_context, udp::endpoint(udp::v4(), 13)), r_io_context(io_context),
 		up_(io_context, g_logMutex),
 		cc_(io_context, g_logMutex),
-		commuDevice_(io_context, g_logMutex)
+		commuDevice_(io_context, g_logMutex),
+		r_logMutex(g_logMutex)
 	{
 		tar_dev_endpoint_ = udp::endpoint(boost::asio::ip::address_v4::from_string("125.125.122.83"),14);
 		tar_upper_endpoint_ = udp::endpoint(boost::asio::ip::address_v4::from_string("127.0.0.1"), 14);
@@ -79,8 +80,10 @@ public:
 			}
 
 			//log
+			r_logMutex.lock();
 			DataToVice logdata = *(DataToVice*)send_buffer_;
 			std::cout << logdata.sAtti[3] << std::endl;
+			r_logMutex.unlock();
 		}
 	}
 
@@ -180,6 +183,7 @@ private:
 
 	boost::mutex io_mutex;
 	boost::mutex statmutex;
+	boost::mutex& r_logMutex;
 };
 
 

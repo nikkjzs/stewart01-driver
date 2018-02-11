@@ -72,7 +72,7 @@ public:
 		process01(newer_data);
 
 		logMutex.lock();
-		std::cout << boost::this_thread::get_id() << "===" << newer_data.timeStamp << std::endl;
+		//std::cout << boost::this_thread::get_id() << "===" << newer_data.timeStamp << std::endl;
 		logMutex.unlock();
 		return;
 	}
