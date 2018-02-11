@@ -77,6 +77,10 @@ public:
 			{
 				socket_.send_to(boost::asio::buffer(send_buffer_), tar_dev_endpoint_);
 			}
+
+			//log
+			DataToVice logdata = *(DataToVice*)send_buffer_;
+			std::cout << logdata.sAtti[3] << std::endl;
 		}
 	}
 

@@ -113,12 +113,21 @@ public:
 			statmutex.lock();
 			senddata.timeStamp++;
 			senddata.upper_cmd = orderfunc(dev_stat_);
+			senddata = EditData(senddata);
 			*(DATA_TO_DRIVER*)send_buffer_ = senddata;
 			int ret = socket_.send_to(boost::asio::buffer(send_buffer_), tar_endpoint_);
 			statmutex.unlock();
 		}
 	}
 
+
+	DATA_TO_DRIVER EditData(DATA_TO_DRIVER inData)
+	{
+		static float x = 0;
+		x++;
+		inData.x = x;
+		return inData;
+	}
 
 	S_CMD orderfunc(DEVICE_STATUS curStat)
 	{
